@@ -24,7 +24,8 @@ class ConsumeCommand extends Command
         echo " [*] Waiting for messages. To exit press CTRL+C\n";
 
         $callback = function (AMQPMessage $msg) {
-            echo ' [x] Received ', $msg->getBody(), "\n";
+            $data = json_decode($msg, true);
+            print_r($data);
         };
 
         $channel->basic_consume('laravel', '', false, true, false, false, $callback);

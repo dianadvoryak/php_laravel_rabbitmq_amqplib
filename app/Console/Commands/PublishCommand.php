@@ -26,10 +26,17 @@ class PublishCommand extends Command
 
         $channel->queue_bind('laravel', 'laravel');
 
-        $msg = new AMQPMessage('Hello World!');
+        $data = [
+            'title' => 'some title',
+            'content' => 'some content',
+        ];
+
+        $data = json_encode($data);
+
+        $msg = new AMQPMessage($data);
         $channel->basic_publish($msg, 'laravel');
 
-        echo " [x] Sent 'Hello World!'\n";
+        echo " [x] Sent $data'\n";
 
         $channel->close();
         $connection->close();
