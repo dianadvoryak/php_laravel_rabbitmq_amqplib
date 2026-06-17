@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Wire\AMQPTable;
+use Illuminate\Support\Facades\Config;
 
 #[Signature('rabbitmq:publish')]
 #[Description('Command description')]
@@ -18,7 +19,12 @@ class PublishCommand extends Command
      */
     public function handle()
     {
-        $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+        $connection = new AMQPStreamConnection(
+            Config::get('rabbitmq.host'),
+            Config::get('rabbitmq.port'),
+            Config::get('rabbitmq.username'),
+            Config::get('rabbitmq.password')
+        );
         $channel = $connection->channel();
 
         $channel->exchange_declare('laravel', 'fanout', false, true, false);
